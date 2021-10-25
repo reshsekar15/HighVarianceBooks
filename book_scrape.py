@@ -5,6 +5,7 @@ import re
 from matplotlib import pyplot as plt
 import seaborn as sns
 import numpy as np
+import json
 
 page = requests.get("https://www.goodreads.com/list/show/6.Best_Books_of_the_20th_Century")
 soup = BeautifulSoup(page.content, 'html.parser')
@@ -47,3 +48,11 @@ for key, val in book_variances.items():
         book_std.update({key: statistics.pstdev(val)})
 
 book_plt = sorted(book_std.items(), key=lambda x: x[1])
+
+books = {}
+for book in book_plt:
+    books.update({book[0]: book[1]})
+
+#if results file is not cloned, code to create it.
+with open('book_results.json', 'w') as fp:
+    json.dump(books, fp)
